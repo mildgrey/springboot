@@ -33,7 +33,6 @@ public class CommentController {
 		Comment comment = new Comment();
 		
 		comment = commentService.getCommentById(commentId);
-		//comment.setCommentId(commentId);
 		commentService.deleteCommentById(commentId);
 		model.addAttribute("comment",comment);
 		return "editComments";

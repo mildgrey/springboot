@@ -40,6 +40,7 @@ p {
 
 	<br>
 	
+	
 	<form action="#" th:action="@{'/page/'}" style="display:inline-block">
 	<input name="keyword" th:value="*{keyword}" />
 	<button th:type="submit" >submit</button>
@@ -49,6 +50,17 @@ p {
 
 	<a th:href="@{'/page/' + ${currentPage} + '?sortField=createdAt&sortDir=' + ${reverseSortDir}}">Created At</a>
 	<a th:href="@{'/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">Title</a>
+	
+	<div>
+    <ul>
+       <li th:each="author : ${authors}">
+         <input type="checkbox" th:field="*{author}" th:value="${author}" />
+         <label th:for="${#ids.prev('author')}" th:text="${item}"></label>
+      </li>
+   </ul>
+</div>
+	
+	
 	<div class="grid-container-element">
 	
 		<div class="grid-child-element" th:each="post : ${listPosts}">
@@ -78,19 +90,19 @@ p {
 				
 				<div class="col-sm-1">
 					 <a
-						th:if="${currentPage >1}" th:href="@{'/page/'+${currentPage-1}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
+						th:if="${currentPage >1}" th:href="@{'/page/'+${currentPage-1}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir} + '&keyword='+${keyword}}">Previous</a>
 						<span th:unless="${currentPage > 1}">Previous</span> 
 				</div><pre>     </pre>
 				
 				<div class="col-sm-1">
 					<a th:if="${currentPage<totalPages}"
-						th:href="@{'/page/'+${currentPage+1}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Next</a> <span
+						th:href="@{'/page/'+${currentPage+1}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}+ '&keyword='+${keyword}}">Next</a> <span
 						th:unless="${currentPage<totalPages}">Next</span>
 				</div> <pre>  </pre> 
 				
 				<div class="col-sm-1">
 					<a th:if="${currentPage<totalPages}"
-						th:href="@{'/page/'+${totalPages}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">Last</a> <span
+						th:href="@{'/page/'+${totalPages}+ '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}+ '&keyword='+${keyword}}">Last</a> <span
 						th:unless="${currentPage<totalPages}">Last</span>
 				</div>
 			</div>

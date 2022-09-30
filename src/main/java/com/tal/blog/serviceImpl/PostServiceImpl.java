@@ -39,21 +39,12 @@ public class PostServiceImpl implements PostService {
 		postRepository.deleteById(Id);
 	}
 
-	@Override
-	public Page<Post> findPaginated(Integer pageNo, int pageSize,String sortField,String sortDirection) {
-		Sort sort=sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending():
-					Sort.by(sortField).descending();
-		Pageable pageable=PageRequest.of(pageNo-1, pageSize,sort);
-		
-		return postRepository.findAll(pageable);
-	}
 
 	@Override
-	public Page<Post> sortedPagination(Integer pageNo, int pageSize,String sortField,String sortDirection,String keyword) {
+	public Page<Post> searchPagination(Integer pageNo, int pageSize,String sortField,String sortDirection,String keyword) {
 		Sort sort=sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending():
 					Sort.by(sortField).descending();
 		Pageable pageable=PageRequest.of(pageNo-1, pageSize,sort);
-		
 		return postRepository.findByKeyword(keyword,pageable);
 	}
 }

@@ -81,20 +81,20 @@ public class PostController {
 
 	@GetMapping({"/page/{currentPage}","/page/","/"})
 	public String allBlogDisplayAsPage(@PathVariable(value="currentPage",required=false) Integer pageNo,
-			@RequestParam(value="sortField",defaultValue="createdAt",required=false) String sortField,@RequestParam(value="sortDir",defaultValue="asc",required=false) String sortDir,@RequestParam(value="keyword",required=false) String keyword
+			@RequestParam(value="sortField",defaultValue="createdAt",required=false) String sortField,@RequestParam(value="sortDir",defaultValue="asc",required=false) String sortDir,@RequestParam(value="keyword",defaultValue="",required=false) String keyword
 			,Model model) {
 		int pageSize=4;
 		
 		if(pageNo==null)
 			pageNo=1;
-	
-		Page<Post> page;
-		if(keyword!=null){
-		  page = postService.sortedPagination(pageNo, pageSize,sortField,sortDir,keyword);
-		  }
-		else {
-			page = postService.findPaginated(pageNo, pageSize,sortField,sortDir);
-		}
+		
+		Page<Post> page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,keyword);
+		
+		if(keyword==null)
+			model.addAttribute("keyword", "");
+		else
+			model.addAttribute("keyword", keyword);
+		
 		model.addAttribute("currentPage",pageNo);
 		model.addAttribute("totalPages",page.getTotalPages());
 		model.addAttribute("totalItems",page.getTotalElements());
@@ -104,8 +104,5 @@ public class PostController {
 		model.addAttribute("listPosts",page.getContent());
 		return  "home";	
 	}
-	
-	
-	
 	
 }
