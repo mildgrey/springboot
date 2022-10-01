@@ -2,7 +2,10 @@ package com.tal.blog.controller;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,20 +84,61 @@ public class PostController {
 
 	@GetMapping({"/page/{currentPage}","/page/","/"})
 	public String allBlogDisplayAsPage(@PathVariable(value="currentPage",required=false) Integer pageNo,
-			@RequestParam(value="sortField",defaultValue="createdAt",required=false) String sortField,@RequestParam(value="sortDir",defaultValue="asc",required=false) String sortDir,@RequestParam(value="keyword",defaultValue="",required=false) String keyword
-			,Model model) {
+			@RequestParam(value="sortField",defaultValue="createdAt",required=false) String sortField,
+			@RequestParam(value="sortDir",defaultValue="asc",required=false) String sortDir,
+			@RequestParam(value="keyword",defaultValue="",required=false) String keyword,
+			@RequestParam(value="author",defaultValue="",required=false) String filteredAuthor,
+			@RequestParam(value="tagName",defaultValue="",required=false) String filteredTagName,
+			Model model) {
 		int pageSize=4;
+		
+		String column;
 		
 		if(pageNo==null)
 			pageNo=1;
 		
-		Page<Post> page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,keyword);
+		Page<Post> page;
+
+		List<Post> posts= postService.getAllPosts();
+		List<Tag> tags= tagService.getAllTags();
+		
+		Set<String >allAuthor=postService.getAllUniqueAuthor(posts);
+		Set<String >allTagName=tagService.getAllUniqueTag(tags);
+		
+		String listOfAuthor[]=filteredAuthor.split(",");
+		String listOfTagName[]=filteredTagName.split(",");
+		
+		List<String[]> listOfFilterByColumn = new ArrayList<>();
+		
+		listOfFilterByColumn.add(listOfAuthor);
+		listOfFilterByColumn.add(listOfTagName);
+		System.out.println("filteredAuthor"+filteredAuthor);
+		System.out.println("filteredAuthor"+filteredTagName);
+		if(!listOfAuthor[0].equals("") || !listOfTagName[0].equals("") ) {
+			page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,listOfFilterByColumn);
+			if(!listOfAuthor[0].equals("")) {
+			   model.addAttribute("allAuthor",filteredAuthor);
+			   }
+			else {
+				model.addAttribute("allTagName",filteredTagName);
+			}
+				 
+			
+		}
+		else {
+			page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,keyword);
+			model.addAttribute("author","");
+		}
 		
 		if(keyword==null)
 			model.addAttribute("keyword", "");
 		else
 			model.addAttribute("keyword", keyword);
 		
+		
+		
+		model.addAttribute("allAuthor",allAuthor);
+		model.addAttribute("allTagName",allTagName);
 		model.addAttribute("currentPage",pageNo);
 		model.addAttribute("totalPages",page.getTotalPages());
 		model.addAttribute("totalItems",page.getTotalElements());
