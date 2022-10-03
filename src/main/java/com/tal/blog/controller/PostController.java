@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,6 @@ public class PostController {
 	@Autowired
 	private TagService tagService;
 	
-	
 	@GetMapping("/fullContent/{id}")
 	public String showFullContent(@PathVariable(value="id") Long id,Model model) {
 		Post post = new Post();
@@ -57,10 +57,11 @@ public class PostController {
 
 		for(int i = 0;i<lengthOfTagsStr;i++) {
 				Tag newTag=new Tag();
-				newTag.setName(tagsStr[i]);
-	            if(tagService.getTagsByName(tagsStr[i]).size()==0 && tagsStr[i]!=null) {
+				newTag.setName(tagsStr[i].toLowerCase());
+	            if(tagService.getTagsByName(tagsStr[i]).size()==0 && tagsStr[i]!=null && !tagsStr[i].equals("")) {
 	                tagService.saveTag(newTag);
 	            }
+	            if(tagsStr[i]!=null && !tagsStr[i].equals(""))
 	            tagsList.add(newTag); 
 			
 		}
@@ -92,8 +93,6 @@ public class PostController {
 			Model model) {
 		int pageSize=4;
 		
-		String column;
-		
 		if(pageNo==null)
 			pageNo=1;
 		
@@ -104,26 +103,22 @@ public class PostController {
 		
 		Set<String >allAuthor=postService.getAllUniqueAuthor(posts);
 		Set<String >allTagName=tagService.getAllUniqueTag(tags);
+		Map<String,String[]> columnAndFilteredColumn=new HashMap<>(); 
 		
 		String listOfAuthor[]=filteredAuthor.split(",");
 		String listOfTagName[]=filteredTagName.split(",");
 		
-		List<String[]> listOfFilterByColumn = new ArrayList<>();
+		columnAndFilteredColumn.put("author",listOfAuthor);
+		columnAndFilteredColumn.put("tagName",listOfTagName);
 		
-		listOfFilterByColumn.add(listOfAuthor);
-		listOfFilterByColumn.add(listOfTagName);
-		System.out.println("filteredAuthor"+filteredAuthor);
-		System.out.println("filteredAuthor"+filteredTagName);
 		if(!listOfAuthor[0].equals("") || !listOfTagName[0].equals("") ) {
-			page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,listOfFilterByColumn);
+			page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,columnAndFilteredColumn);
 			if(!listOfAuthor[0].equals("")) {
 			   model.addAttribute("allAuthor",filteredAuthor);
 			   }
 			else {
 				model.addAttribute("allTagName",filteredTagName);
-			}
-				 
-			
+			}	
 		}
 		else {
 			page=postService.searchPagination(pageNo, pageSize,sortField,sortDir,keyword);
@@ -134,8 +129,6 @@ public class PostController {
 			model.addAttribute("keyword", "");
 		else
 			model.addAttribute("keyword", keyword);
-		
-		
 		
 		model.addAttribute("allAuthor",allAuthor);
 		model.addAttribute("allTagName",allTagName);
@@ -148,5 +141,4 @@ public class PostController {
 		model.addAttribute("listPosts",page.getContent());
 		return  "home";	
 	}
-	
 }

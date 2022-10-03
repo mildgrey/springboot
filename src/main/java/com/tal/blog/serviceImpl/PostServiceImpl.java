@@ -1,7 +1,9 @@
 package com.tal.blog.serviceImpl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,6 @@ import com.tal.blog.service.PostService;
 
 @Service
 public class PostServiceImpl implements PostService {
-	private int AUTHOR=0;
-	private int TAGNAME=1;
 	
 	@Override
    public Set<String> getAllUniqueAuthor(List<Post> posts){
@@ -67,14 +67,17 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public Page<Post> searchPagination(Integer pageNo, int pageSize,String sortField,String sortDirection,List<String[]> listOfFilterByColumn) {
+	public Page<Post> searchPagination(Integer pageNo, int pageSize,String sortField,String sortDirection,Map<String,String[]> columnAndFilteredColumn) {
 		Pageable pageable=getPageable(pageNo,pageSize,sortField,sortDirection);
-		
-		if(!listOfFilterByColumn.get(0).equals("")) {
-		    return postRepository.findAllByAuthor(listOfFilterByColumn.get(AUTHOR),pageable);
+		String[] authorList=columnAndFilteredColumn.get("author");
+		String[] tagNameList=columnAndFilteredColumn.get("tagName");
+		System.out.println("author"+authorList[0]);
+		System.out.println("tagName"+tagNameList[0]);
+		if(!authorList[0].equals("")) {
+		    return postRepository.findAllByAuthor(authorList,pageable);
 		}
 		else
-			return postRepository.findAllByTagName(listOfFilterByColumn.get(TAGNAME),pageable);
+			return postRepository.findAllByTagName(tagNameList,pageable);
 			
 	}
 	
