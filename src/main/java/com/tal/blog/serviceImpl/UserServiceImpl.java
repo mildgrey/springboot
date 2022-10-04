@@ -36,13 +36,8 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
     		Role role=new Role();
     		role.setName("ROLE_USER");
-    		User locUser=new User();
-    		locUser.setFirstName(user.getFirstName());
-    		locUser.setLastName(user.getLastName());
-    		locUser.setEmail(user.getEmail());
-    		locUser.setPassword(passwordEncoder.encode(user.getPassword()));
-    		locUser.setRoles(Arrays.asList(role));
-        return userRepository.save(locUser);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override

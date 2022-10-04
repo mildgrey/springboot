@@ -13,24 +13,16 @@ import com.tal.blog.service.UserService;
 @Controller
 @RequestMapping("/registration")
 public class UserRegistrationController {
-
+    @Autowired
     private UserService userService;
-
-    public UserRegistrationController(UserService userService) {
-        super();
-        this.userService = userService;
-    }
-
     @ModelAttribute("user")
     public User user() {
         return new User();
     }
-
     @GetMapping
     public String showRegistrationForm() {
         return "registration";
     }
-
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") User user) {
         userService.save(user);
