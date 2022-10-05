@@ -1,7 +1,11 @@
 package com.tal.blog.controller;
 
 
+import com.tal.blog.service.UserService;
+import com.tal.blog.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +23,20 @@ public class CommentController {
 	private CommentService commentService;
 	@Autowired
 	private PostService postService;
-	
+	@Autowired
+	private UserService userService;
+
 	@PostMapping("/createComment/{id}")
 	public String createComment(@PathVariable("id") Long id,@ModelAttribute Comment comment) {
 		Post post = new Post();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if(!auth.equals("anonymous")) {
+			String userEmail = auth.getName();
+			String userName = userEmail.split("@")[0];
+			comment.setName(userName);
+			comment.setEmail(userEmail);
+		}
 		post=postService.getPostById(id);
 		comment.setPost(post);
 		commentService.saveComment(comment);

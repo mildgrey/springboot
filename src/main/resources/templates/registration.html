@@ -30,15 +30,13 @@
   </div>
  </div>
 </nav>
+<br>
+<br>
 
-<br>
-<br>
-<!-- Create HTML registration form -->
 <div class="container">
  <div class="row">
   <div class="col-md-6 col-md-offset-3">
 
-   <!-- success message -->
    <div th:if="${param.success}">
     <div class="alert alert-info">You've successfully registered
      to our awesome app!</div>
@@ -80,6 +78,7 @@
   </div>
  </div>
 </div>
+<a th:href="@{/}"> Back to Post List</a>
 </body>
 </html>
 

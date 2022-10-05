@@ -33,7 +33,7 @@ public class Post {
 	private String content;
 	private String author;
 	private String publishedAt;
-	private String isPublished;
+	private Boolean isPublished;
 	@CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -107,11 +107,11 @@ public class Post {
 		this.publishedAt = publishedAt;
 	}
 
-	public String getIsPublished() {
+	public Boolean getIsPublished() {
 		return isPublished;
 	}
 
-	public void setIsPublished(String isPublished) {
+	public void setIsPublished(Boolean isPublished) {
 		this.isPublished = isPublished;
 	}
 

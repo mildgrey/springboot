@@ -19,26 +19,22 @@
             
             <input type="text" th:field="*{title}" placeholder="Post Title " class="form-control mb-4 col-4">
 
-            <input type="text" th:field="*{excerpt}" placeholder="Excerpt" class="form-control mb-4 col-4">
-
             <input type="text" th:field="*{content}" placeholder="content" class="form-control mb-4 col-4">
             
-            <input type="text" th:field="*{tags[0].name}" placeholder="tags" class="form-control mb-4 col-4"> 
-			
-			<input type="text" th:field="*{author}" placeholder="author" class="form-control mb-4 col-4">
+            <input type="text" th:field="*{tags[0].name}" placeholder="tags" class="form-control mb-4 col-4">
+
+            <input type="hidden" name="author" th:value="${#authentication.getPrincipal().getUsername().split('@')[0]}">
 
             <input type="text" th:field="*{publishedAt}" placeholder="published at" class="form-control mb-4 col-4">
 
-            <input type="text" th:field="*{isPublished}" placeholder="is published" class="form-control mb-4 col-4">
-			
-			<input type="text" th:field="*{createdAt}" placeholder="createdAt" class="form-control mb-4 col-4">
+            <input type="checkbox" th:field="*{isPublished}" placeholder="is published" class="form-control mb-4 col-4">
 
             <button type="submit" class="btn btn-info col-2"> Save Post</button>
         </form>
 
         <hr>
 
-        <a th:href="@{/all}"> Back to Post List</a>
+        <a th:href="@{/}"> Back to Post List</a>
     </div>
 </body>
 

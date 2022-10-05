@@ -8,16 +8,8 @@
 <body>
  
 	<form th:action="@{/createComment/{id}(id=${comment.post.postId})}"  method="POST" th:object="${comment}">
-           
-           <input type="text" th:field="${comment.name}" class="form-control mb-4 col-4"/>
-
-           <input type="text" th:field="${comment.email}" class="form-control mb-4 col-4"/>
-
             <input type="text" th:field="${comment.textComment}" class="form-control mb-4 col-4"/>
-			
             <button type="submit" class="btn btn-info col-2" > Save Comment</button>
         </form>
-       
-        
 </body>
 </html>

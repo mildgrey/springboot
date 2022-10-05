@@ -21,21 +21,16 @@ import com.tal.blog.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-
+  @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        super();
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User save(User user) {
     		Role role=new Role();
     		role.setName("ROLE_USER");
+            user.setRoles(Arrays.asList(role));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

@@ -50,6 +50,7 @@ public class PostController {
 	}
 	@PostMapping("/savePost")
 	public String savePost(@ModelAttribute("post") Post post) {
+		String content;
 		String tagsStr[]=post.getTags().get(0).getName().replaceAll("\\s", "").split("#");
 		
 		List<Tag>tagsList=new ArrayList<>();
@@ -66,6 +67,8 @@ public class PostController {
 			
 		}
 		post.setTags(tagsList);
+		content=post.getContent();
+		post.setExcerpt(content.substring(0,content.length()/3));
 		postService.savePost(post);
 		return "redirect:/";
 	}
@@ -73,7 +76,6 @@ public class PostController {
 	public String updatePost(@PathVariable(value="id") Long id,Model model) {
 		
 		Post post =postService.getPostById(id);
-		post.setIsPublished("No");
 		model.addAttribute("post",post);
 		return "updatePost";
 	}
